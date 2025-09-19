@@ -80,6 +80,21 @@ These tools cover formatting, linting, and type checking:
 - [ruff](https://github.com/astral-sh/ruff) → Fast linter with rules from pylint, flake8, etc.
 - [mypy](https://github.com/python/mypy) → Static type checker for Python.
 
+**NOTE:** `mypy` tries to find the entry point of packages for checking, hence we need to create an empty `__init__.py` within the root of our folder for it to know that this is a package.
+
+Add the following to `pyproject.toml` as well for `mypy` configuration:
+
+```toml
+[tool.mypy]
+mypy_path = "packages"
+packages = ["backend"]
+explicit_package_bases = true
+```
+
+- `mypy_path` - Path where your packages lie
+- `packages` - Package(s) to scan
+- `explicit_package_bases` - Whether to use the relative path to determine the fully qualified module name
+
 And that's it! It is much simpler than most of the stacks out there.
 
 Commands for each can be looked up on their respective GitHub repositories (linked in the names). Below is an example script if you are dual-stacking this with a Javascript-based frontend, and is using `husky` and `lint-staged`:
@@ -87,8 +102,8 @@ Commands for each can be looked up on their respective GitHub repositories (link
 ```json
     // package.json
     "scripts": {
-        "lint:backend": "uv run --cwd packages/backend ruff . && uv run --cwd packages/backend mypy .",
-        "format:backend": "uv run --cwd packages/backend autoflake --in-place --remove-unused-variables --remove-all-unused-imports && uv run --cwd packages/backend isort . && uv run --cwd packages/backend black ."
+        "lint:backend": "uv run --directory packages/backend ruff . && uv run mypy packages/backend",
+        "format:backend": "uv run --directory packages/backend autoflake --in-place --remove-unused-variables --remove-all-unused-imports . && uv run --directory packages/backend isort . && uv run --directory packages/backend black ."
     }
 
     // .lintstagedrc.json
@@ -98,7 +113,7 @@ Commands for each can be looked up on their respective GitHub repositories (link
     ]
 ```
 
-The above assumes that you have the following directory structure:
+All of the above assumes that you have the following directory structure:
 
 ```txt
     my-monorepo/
