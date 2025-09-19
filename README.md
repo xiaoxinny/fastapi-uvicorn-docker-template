@@ -94,8 +94,7 @@ Commands for each can be looked up on their respective GitHub repositories (link
     // .lintstagedrc.json
     "backend/**/*.py": [
         "npm run format:backend",
-        "npm run lint:backend",
-        "git add"
+        "npm run lint:backend"
     ]
 ```
 
