@@ -67,7 +67,6 @@ With the base server in order, we will now proceed on with linting and best prac
 Run the following commands to install the packages below:
 
 ```sh
-    uv init
     uv add --dev autoflake isort black ruff mypy
 ```
 
