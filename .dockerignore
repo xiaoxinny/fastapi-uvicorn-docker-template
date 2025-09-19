@@ -1,0 +1,21 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env
+
+# Git files
+.git
+.gitignore
+
+# Local logs and temp
+*.log
+*.tmp
+
+# Node / frontend files if in a monorepo
+**/node_modules/
+**/dist/
