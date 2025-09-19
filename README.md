@@ -75,13 +75,44 @@ This will create a `uv.lock` and `pyproject.toml`.
 
 These tools cover formatting, linting, and type checking:
 
-- autoflake → Removes unused imports and variables.
-- isort → Sorts imports consistently.
-- black → Auto-formats Python code to a standard style.
-- ruff → Fast linter with rules from pylint, flake8, etc.
-- mypy → Static type checker for Python.
+- [autoflake](https://github.com/PyCQA/autoflake) → Removes unused imports and variables.
+- [isort](https://github.com/PyCQA/isort) → Sorts imports consistently.
+- [black](https://github.com/psf/black) → Auto-formats Python code to a standard style.
+- [ruff](https://github.com/astral-sh/ruff) → Fast linter with rules from pylint, flake8, etc.
+- [mypy](https://github.com/python/mypy) → Static type checker for Python.
 
 And that's it! It is much simpler than most of the stacks out there.
+
+Commands for each can be looked up on their respective GitHub repositories (linked in the names). Below is an example script if you are dual-stacking this with a Javascript-based frontend, and is using `husky` and `lint-staged`:
+
+```json
+    // package.json
+    "scripts": {
+        "lint:backend": "uv run --cwd packages/backend ruff . && uv run --cwd packages/backend mypy .",
+        "format:backend": "uv run --cwd packages/backend autoflake --in-place --remove-unused-variables --remove-all-unused-imports && uv run --cwd packages/backend isort . && uv run --cwd packages/backend black ."
+    }
+
+    // .lintstagedrc.json
+    "backend/**/*.py": [
+        "npm run format:backend",
+        "npm run lint:backend",
+        "git add"
+    ]
+```
+
+The above assumes that you have the following directory structure:
+
+```txt
+    my-monorepo/
+    │── package.json          # root for Husky, lint-staged, etc.
+    │── .husky/
+    │── .lintstagedrc.json
+    │── packages/
+    │   ├── frontend/         
+    │   └── backend/
+```
+
+Else, feel free to change the fields as you wish. They serve only as a guideline.
 
 ## Additional configuration
 
@@ -136,8 +167,8 @@ A `.dockerignore` is also included to reduce bloat and improve image sizes.
     *.tmp
 
     # Node / frontend files if in a monorepo
-    node_modules/
-    packages/frontend/dist/
+    **/node_modules/
+    **/dist/
 ```
 
 Now you can build and run it with the commmands below:
